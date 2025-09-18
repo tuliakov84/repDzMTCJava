@@ -2,9 +2,9 @@ name: CI Build
 
 on:
   push:
-    branches: '*'
+    branches: ["feature/hw2"]
   pull_request:
-    branches: '*'
+    branches: ["feature/hw2"]
 
 jobs:
   build:
@@ -21,4 +21,4 @@ jobs:
 
       - name: Run mvn package
         run: |
-          mvn clean package
+          mvn package
