@@ -2,9 +2,11 @@ name: CI Build
 
 on:
   push:
-    branches: - "**"
+    branches: 
+      - "**"
   pull_request:
-    branches: - "**"
+    branches: 
+      - "**"
 
 jobs:
   build:
@@ -18,7 +20,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: maven
 
       - name: Run mvn package
-        run: |
+        run: 
           mvn package
