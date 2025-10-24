@@ -1,4 +1,4 @@
-package com.mipt;
+package com.mipt.hw5;
 
 import org.junit.jupiter.api.Test;
 
