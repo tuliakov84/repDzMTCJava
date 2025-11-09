@@ -1,3 +1,5 @@
+package com.mipt.hw4;
+
 public class ArrayUtils {
   public static <T> int findFirst(T[] array, T element) {
     if (array == null) {

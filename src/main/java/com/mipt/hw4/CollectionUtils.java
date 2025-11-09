@@ -1,4 +1,6 @@
+package com.mipt.hw4;
 import java.util.*;
+
 
 public class CollectionUtils {
   public static <T> List<T> mergeLists(List<? extends T> list1,

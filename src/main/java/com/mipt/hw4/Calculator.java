@@ -1,3 +1,5 @@
+package com.mipt.hw4;
+
 public class Calculator<T extends Number> {
   public double sum(T a, T b) {
     if (a == null || b == null) {
