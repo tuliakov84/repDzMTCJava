@@ -1,4 +1,4 @@
-package model;
+package com.mipt.hw2.model;
 
 public class Human {
     private String name;
