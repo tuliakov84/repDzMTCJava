@@ -1,4 +1,4 @@
-package com.mipt.hw7_patterns;
+package com.mipt.hw8_patterns;
 
 import java.time.Duration;
 import java.time.Instant;

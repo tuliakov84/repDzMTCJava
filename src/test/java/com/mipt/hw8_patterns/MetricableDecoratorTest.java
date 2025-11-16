@@ -1,4 +1,4 @@
-package com.mipt.hw7_patterns;
+package com.mipt.hw8_patterns;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

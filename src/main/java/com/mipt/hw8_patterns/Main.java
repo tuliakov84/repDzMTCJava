@@ -1,4 +1,4 @@
-package com.mipt.hw7_patterns;
+package com.mipt.hw8_patterns;
 
 public class Main {
   public static void main(String[] args) {
