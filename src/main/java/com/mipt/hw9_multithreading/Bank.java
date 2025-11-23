@@ -1,7 +1,5 @@
 package com.mipt.hw9_multithreading;
 
-package com.mipt.hw9_multithreading;
-
 public class Bank {
   public void sendToAccount(BankAccount source, BankAccount destination, int amount) {
     if (source == null || destination == null) throw new IllegalArgumentException();
