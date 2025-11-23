@@ -1,7 +1,5 @@
 package com.mipt.hw9_multithreading;
 
-package com.mipt.hw9_multithreading;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
