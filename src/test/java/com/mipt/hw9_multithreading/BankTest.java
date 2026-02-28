@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.mipt.sem1.hw9_multithreading.Bank;
+import com.mipt.sem1.hw9_multithreading.BankAccount;
 import org.junit.jupiter.api.Test;
 
 class BankTest {

@@ -1,5 +1,8 @@
 package com.mipt.hw8_patterns;
 
+import com.mipt.sem1.hw8_patterns.CachingDecorator;
+import com.mipt.sem1.hw8_patterns.DataService;
+import com.mipt.sem1.hw8_patterns.SimpleDataService;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
