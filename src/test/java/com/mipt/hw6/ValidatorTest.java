@@ -1,5 +1,6 @@
 package com.mipt.hw6;
 
+import com.mipt.sem1.hw6.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

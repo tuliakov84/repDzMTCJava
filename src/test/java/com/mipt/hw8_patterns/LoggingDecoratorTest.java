@@ -1,5 +1,8 @@
 package com.mipt.hw8_patterns;
 
+import com.mipt.sem1.hw8_patterns.DataService;
+import com.mipt.sem1.hw8_patterns.LoggingDecorator;
+import com.mipt.sem1.hw8_patterns.SimpleDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

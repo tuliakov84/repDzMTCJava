@@ -1,5 +1,6 @@
 package com.mipt.hw5;
 
+import com.mipt.sem1.hw5.Student;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

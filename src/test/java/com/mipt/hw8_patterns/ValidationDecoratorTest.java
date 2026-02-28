@@ -1,5 +1,8 @@
 package com.mipt.hw8_patterns;
 
+import com.mipt.sem1.hw8_patterns.DataService;
+import com.mipt.sem1.hw8_patterns.SimpleDataService;
+import com.mipt.sem1.hw8_patterns.ValidationDecorator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
