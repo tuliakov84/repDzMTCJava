@@ -16,7 +16,7 @@ spring:
       on-profile: dev
 logging:
   level:
-    com.example: DEBUG
+    com.mipt.sem2: DEBUG
     org.springframework: INFO
 app:
   name: Todo List Manager DEV
