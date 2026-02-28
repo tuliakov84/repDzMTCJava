@@ -5,6 +5,7 @@ import com.mipt.sem2.todolist.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,6 +14,12 @@ import java.util.*;
 public class TaskService {
   private final TaskRepository taskRepository;
   private Map<String, Task> taskCache = new HashMap<>();
+
+  @Value("${app.name}")
+  private String appName;
+
+  @Value("${app.version}")
+  private String appVersion;
 
   @Autowired
   public TaskService(TaskRepository taskRepository) {
