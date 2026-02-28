@@ -40,7 +40,7 @@ class TaskControllerMockitoTest {
 
   @BeforeEach
   void setUp() {
-    baseUrl = "http:localhost:" + port + "/api/tasks";
+    baseUrl = "http://localhost:" + port + "/api/tasks";
     testTaskId = UUID.randomUUID();
 
     testTask = new Task();
