@@ -2,15 +2,17 @@ package com.mipt.sem2.todolist.service;
 
 import com.mipt.sem2.todolist.model.Task;
 import com.mipt.sem2.todolist.repository.TaskRepository;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 
 @Service
 public class TaskService {
   private final TaskRepository taskRepository;
+  private Map<String, Task> taskCache = new HashMap<>();
 
   @Autowired
   public TaskService(TaskRepository taskRepository) {
@@ -45,5 +47,18 @@ public class TaskService {
       return true;
     }
     return false;
+  }
+
+  @PostConstruct
+  public void initCache() {
+    System.out.println("TaskService: initializing cache with tasks from repository");
+    taskRepository.findAll().forEach(task -> taskCache.put(task.getTitle(), task));
+    System.out.println("TaskService: cache initialized with " + taskCache.size() + " tasks");
+  }
+
+  @PreDestroy
+  public void destroyCache() {
+    System.out.println("TaskService: cleaning up cache. Tasks in cache: " + taskCache.size());
+    taskCache.clear();
   }
 }
