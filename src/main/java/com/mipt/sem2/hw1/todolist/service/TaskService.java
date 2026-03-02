@@ -11,11 +11,18 @@ import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class TaskService {
   private final TaskRepository taskRepository;
   private Map<String, Task> taskCache = new HashMap<>();
+  @Value("${app.name}")
+  private String appName;
+
+  @Value("${app.version}")
+  private String appVersion;
+
 
   @Autowired
   public TaskService(TaskRepository taskRepository) {
