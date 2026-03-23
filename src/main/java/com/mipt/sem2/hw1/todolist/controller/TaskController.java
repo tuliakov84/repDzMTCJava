@@ -1,45 +1,58 @@
 package com.mipt.sem2.hw1.todolist.controller;
 
+import com.mipt.sem2.hw1.todolist.dto.TaskCreateDto;
+import com.mipt.sem2.hw1.todolist.dto.TaskResponseDto;
+import com.mipt.sem2.hw1.todolist.dto.TaskUpdateDto;
+import com.mipt.sem2.hw1.todolist.mapper.TaskMapper;
 import com.mipt.sem2.hw1.todolist.model.Task;
 import com.mipt.sem2.hw1.todolist.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
-  private final TaskService taskService;
 
-  @Autowired
-  public TaskController(TaskService taskService) {
-    this.taskService = taskService;
-  }
+  private final TaskService taskService;
+  private final TaskMapper taskMapper;
 
   @GetMapping
-  public List<Task> getAllTasks() {
-    return taskService.getAllTasks();
+  public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
+    List<TaskResponseDto> tasks = taskService.getAllTasks().stream()
+        .map(taskMapper::toResponseDto)
+        .collect(Collectors.toList());
+    return ResponseEntity.ok(tasks);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Task> getTaskById(@PathVariable UUID id) {
+  public ResponseEntity<TaskResponseDto> getTaskById(@PathVariable UUID id) {
     return taskService.getTaskById(id)
+        .map(taskMapper::toResponseDto)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }
 
   @PostMapping
-  public ResponseEntity<Task> createTask(@RequestBody Task task) {
+  public ResponseEntity<TaskResponseDto> createTask(@RequestBody TaskCreateDto dto) {
+    Task task = taskMapper.toEntity(dto);
     Task created = taskService.createTask(task);
-    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    return ResponseEntity.status(HttpStatus.CREATED).body(taskMapper.toResponseDto(created));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Task> updateTask(@PathVariable UUID id, @RequestBody Task task) {
-    return taskService.updateTask(id, task)
+  public ResponseEntity<TaskResponseDto> updateTask(@PathVariable UUID id,
+                                                    @RequestBody TaskUpdateDto dto) {
+    return taskService.updateTask(id, existing -> {
+          taskMapper.updateEntity(dto, existing);
+          return existing;
+        }).map(taskMapper::toResponseDto)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
   }

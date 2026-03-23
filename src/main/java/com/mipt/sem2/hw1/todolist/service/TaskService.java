@@ -11,6 +11,8 @@ import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.*;
+import java.util.function.Function;
+
 import org.springframework.beans.factory.annotation.Value;
 
 @Service
@@ -71,5 +73,11 @@ public class TaskService {
   public void destroyCache() {
     System.out.println("TaskService: cleaning up cache. Tasks in cache: " + taskCache.size());
     taskCache.clear();
+  }
+
+  public Optional<Task> updateTask(UUID id, Function<Task, Task> updater) {
+    return taskRepository.findById(id)
+        .map(updater)
+        .map(taskRepository::save);
   }
 }
