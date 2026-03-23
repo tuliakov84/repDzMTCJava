@@ -1,18 +1,14 @@
-package com.mipt.sem2.hw1.todolist.model;
+package com.mipt.sem2.hw1.todolist.dto;
 
-import com.mipt.sem2.hw1.todolist.enums.Priority;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import com.mipt.sem2.hw1.todolist.enums.Priority;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Task {
+public class TaskResponseDto {
   private UUID id;
   private String title;
   private String description;
