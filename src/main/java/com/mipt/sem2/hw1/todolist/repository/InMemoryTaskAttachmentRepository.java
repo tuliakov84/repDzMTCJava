@@ -7,29 +7,39 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class InMemoryTaskAttachmentRepository {
-    private final Map<Long, TaskAttachment> storage = new ConcurrentHashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(1);
+public class InMemoryTaskAttachmentRepository implements TaskAttachmentRepository {
 
-    public TaskAttachment save(TaskAttachment attachment) {
-        if (attachment.getId() == null) {
-            attachment.setId(idGenerator.getAndIncrement());
-        }
-        storage.put(attachment.getId(), attachment);
-        return attachment;
-    }
+  private final Map<Long, TaskAttachment> storage = new ConcurrentHashMap<>();
+  private final AtomicLong idGenerator = new AtomicLong(1);
 
-    public Optional<TaskAttachment> findById(Long id) {
-        return Optional.ofNullable(storage.get(id));
+  @Override
+  public TaskAttachment save(TaskAttachment attachment) {
+    if (attachment.getId() == null) {
+      attachment.setId(idGenerator.getAndIncrement());
     }
+    storage.put(attachment.getId(), attachment);
+    return attachment;
+  }
 
-    public List<TaskAttachment> findByTaskId(UUID taskId) {
-        return storage.values().stream()
-                .filter(a -> a.getTaskId().equals(taskId))
-                .toList();
-    }
+  @Override
+  public Optional<TaskAttachment> findById(Long id) {
+    return Optional.ofNullable(storage.get(id));
+  }
 
-    public void deleteById(Long id) {
-        storage.remove(id);
-    }
+  @Override
+  public List<TaskAttachment> findByTaskId(UUID taskId) {
+    return storage.values().stream()
+        .filter(a -> a.getTaskId().equals(taskId))
+        .toList();
+  }
+
+  @Override
+  public void deleteById(Long id) {
+    storage.remove(id);
+  }
+
+  @Override
+  public boolean existsById(Long id) {
+    return storage.containsKey(id);
+  }
 }
