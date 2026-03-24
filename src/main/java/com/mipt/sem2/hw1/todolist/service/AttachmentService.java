@@ -1,8 +1,10 @@
 package com.mipt.sem2.hw1.todolist.service;
 
+import com.mipt.sem2.hw1.todolist.exception.AttachmentNotFoundException;
 import com.mipt.sem2.hw1.todolist.model.TaskAttachment;
 import com.mipt.sem2.hw1.todolist.repository.TaskAttachmentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,27 +20,42 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AttachmentService {
 
   private final TaskAttachmentRepository attachmentRepository;
+  private final TaskService taskService;
 
   @Value("${app.upload.dir:uploads}")
   private String uploadDir;
 
   public TaskAttachment storeAttachment(UUID taskId, MultipartFile file) throws IOException {
-    String storedFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+    if (!taskService.getTaskById(taskId).isPresent()) {
+      throw new IllegalArgumentException("Task not found with id: " + taskId);
+    }
+    if (file.isEmpty()) {
+      throw new IllegalArgumentException("Cannot store empty file");
+    }
+
+    String originalFileName = file.getOriginalFilename();
+    String safeFileName = originalFileName != null
+        ? originalFileName.replaceAll("[^a-zA-Z0-9.-]", "_")
+        : "unnamed";
+    String storedFileName = UUID.randomUUID() + "_" + safeFileName;
+
     Path uploadPath = Paths.get(uploadDir);
     if (!Files.exists(uploadPath)) {
       Files.createDirectories(uploadPath);
     }
+
     Path filePath = uploadPath.resolve(storedFileName);
     Files.copy(file.getInputStream(), filePath);
 
     TaskAttachment attachment = new TaskAttachment();
     attachment.setTaskId(taskId);
-    attachment.setFileName(file.getOriginalFilename());
+    attachment.setFileName(originalFileName);
     attachment.setStoredFileName(storedFileName);
     attachment.setContentType(file.getContentType());
     attachment.setSize(file.getSize());
@@ -53,7 +70,7 @@ public class AttachmentService {
 
   public Resource loadAsResource(Long attachmentId) throws IOException {
     TaskAttachment attachment = attachmentRepository.findById(attachmentId)
-        .orElseThrow(() -> new RuntimeException("Attachment not found"));
+        .orElseThrow(() -> new AttachmentNotFoundException(attachmentId));
     Path filePath = Paths.get(uploadDir).resolve(attachment.getStoredFileName());
     Resource resource = new UrlResource(filePath.toUri());
     if (resource.exists() && resource.isReadable()) {
@@ -65,7 +82,7 @@ public class AttachmentService {
 
   public void deleteAttachment(Long attachmentId) throws IOException {
     TaskAttachment attachment = attachmentRepository.findById(attachmentId)
-        .orElseThrow(() -> new RuntimeException("Attachment not found"));
+        .orElseThrow(() -> new AttachmentNotFoundException(attachmentId));
     Path filePath = Paths.get(uploadDir).resolve(attachment.getStoredFileName());
     Files.deleteIfExists(filePath);
     attachmentRepository.deleteById(attachmentId);
