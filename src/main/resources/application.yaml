@@ -29,3 +29,7 @@ spring:
 logging:
   level:
     com.mipt.sem2.hw1.todolist: WARN
+servlet:
+  multipart:
+    max-file-size: 10MB
+    max-request-size: 10MB
