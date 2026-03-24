@@ -12,8 +12,6 @@ public class StubTaskRepository implements TaskRepository {
 
   public StubTaskRepository() {
     UUID id1 = UUID.randomUUID(), id2 = UUID.randomUUID();
-    stubData.put(id1, new Task(id1, "Stub Task 1", "aaiii uchi matan", false));
-    stubData.put(id2, new Task(id2, "Stub Task 2", "ne zabud' poest, a to sdohnesh", true));
   }
 
   @Override

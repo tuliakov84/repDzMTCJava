@@ -3,13 +3,14 @@ package com.mipt.sem2.hw1.todolist.repository;
 import com.mipt.sem2.hw1.todolist.model.TaskAttachment;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface TaskAttachmentRepository {
   TaskAttachment save(TaskAttachment attachment);
 
   Optional<TaskAttachment> findById(Long id);
 
-  List<TaskAttachment> findByTaskId(Long taskId);
+  List<TaskAttachment> findByTaskId(UUID taskId);
 
   void deleteById(Long id);
 
