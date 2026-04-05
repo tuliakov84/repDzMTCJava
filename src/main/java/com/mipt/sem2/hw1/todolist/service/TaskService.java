@@ -3,6 +3,7 @@ package com.mipt.sem2.hw1.todolist.service;
 
 import com.mipt.sem2.hw1.todolist.model.Task;
 import com.mipt.sem2.hw1.todolist.repository.TaskRepository;
+import com.mipt.sem2.hw1.todolist.validator.DueDateNotBeforeCreation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,9 +12,13 @@ import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.*;
+import java.util.function.Function;
+import org.springframework.validation.annotation.Validated;
+
 import org.springframework.beans.factory.annotation.Value;
 
 @Service
+@Validated
 public class TaskService {
   private final TaskRepository taskRepository;
   private Map<String, Task> taskCache = new HashMap<>();
@@ -37,10 +42,12 @@ public class TaskService {
     return taskRepository.findById(id);
   }
 
+  @DueDateNotBeforeCreation
   public Task createTask(Task task) {
     return taskRepository.save(task);
   }
 
+  @DueDateNotBeforeCreation
   public Optional<Task> updateTask(UUID id, Task updatedTask) {
     return taskRepository.findById(id)
         .map(existing -> {
@@ -71,5 +78,12 @@ public class TaskService {
   public void destroyCache() {
     System.out.println("TaskService: cleaning up cache. Tasks in cache: " + taskCache.size());
     taskCache.clear();
+  }
+
+  @DueDateNotBeforeCreation
+  public Optional<Task> updateTask(UUID id, Function<Task, Task> updater) {
+    return taskRepository.findById(id)
+        .map(updater)
+        .map(taskRepository::save);
   }
 }
