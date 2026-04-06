@@ -49,6 +49,7 @@ public class AttachmentController {
     Resource resource = attachmentService.loadAsResource(attachmentId);
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.getFileName() + "\"")
+        .header(HttpHeaders.CONTENT_TYPE, attachment.getContentType())
         .body(resource);
   }
 
