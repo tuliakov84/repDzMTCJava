@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     updated_at TIMESTAMP,
     due_date DATE,
     priority VARCHAR(10) CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH')),
-    tags JSONB
+    tags TEXT
 );
 
 CREATE TABLE IF NOT EXISTS task_attachments (

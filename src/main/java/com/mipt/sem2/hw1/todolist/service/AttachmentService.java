@@ -98,6 +98,6 @@ public class AttachmentService {
 
   @Transactional(readOnly = true)
   public List<TaskAttachment> getAttachmentsByTaskId(UUID taskId) {
-    return attachmentRepository.findByTaskId(taskId);
+    return attachmentRepository.findByTask_Id(taskId);
   }
 }

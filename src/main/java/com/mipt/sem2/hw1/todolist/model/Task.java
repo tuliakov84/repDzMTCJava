@@ -50,7 +50,7 @@ public class Task {
   private Priority priority;
 
   //эти в Json еределываю
-  @Column(columnDefinition = "jsonb")
+  @Column(columnDefinition = "TEXT")
   @Convert(converter = SetToStringJsonConverter.class)
   private Set<String> tags;
 
