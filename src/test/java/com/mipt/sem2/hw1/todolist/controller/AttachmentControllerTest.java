@@ -2,6 +2,7 @@ package com.mipt.sem2.hw1.todolist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mipt.sem2.hw1.todolist.dto.AttachmentResponseDto;
+import com.mipt.sem2.hw1.todolist.model.Task;
 import com.mipt.sem2.hw1.todolist.model.TaskAttachment;
 import com.mipt.sem2.hw1.todolist.service.AttachmentService;
 import org.junit.jupiter.api.Test;
@@ -49,12 +50,14 @@ class AttachmentControllerTest {
 
     TaskAttachment saved = new TaskAttachment();
     saved.setId(1L);
-    saved.setTaskId(taskId);
+    Task task = new Task();
+    task.setId(UUID.randomUUID());
     saved.setFileName("test.txt");
     saved.setStoredFileName("uuid_test.txt");
     saved.setContentType(MediaType.TEXT_PLAIN_VALUE);
     saved.setSize(file.getSize());
     saved.setUploadedAt(LocalDateTime.now());
+    saved.setTask(task);
 
     when(attachmentService.storeAttachment(eq(taskId), any(MockMultipartFile.class)))
         .thenReturn(saved);

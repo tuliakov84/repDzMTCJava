@@ -7,14 +7,16 @@ import com.mipt.sem2.hw1.todolist.model.Task;
 import org.mapstruct.*;
 import java.time.LocalDateTime;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface TaskMapper {
 
-    Task toEntity(TaskCreateDto dto);
-
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "completed", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "attachments", ignore = true)
+    Task toEntity(TaskCreateDto dto);
     void updateEntity(TaskUpdateDto dto, @MappingTarget Task task);
 
     TaskResponseDto toResponseDto(Task task);
