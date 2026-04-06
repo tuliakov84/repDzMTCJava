@@ -4,7 +4,7 @@ import com.mipt.sem2.hw1.todolist.exception.AttachmentNotFoundException;
 import com.mipt.sem2.hw1.todolist.model.Task;
 import com.mipt.sem2.hw1.todolist.model.TaskAttachment;
 import com.mipt.sem2.hw1.todolist.repository.TaskAttachmentRepository;
-import com.mipt.sem2.hw1.todolist.repository.TaskRepository;
+import com.mipt.sem2.hw1.todolist.repository.TaskRepository;  // ← Добавили напрямую
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Slf4j
 public class AttachmentService {
 
   private final TaskAttachmentRepository attachmentRepository;
@@ -38,7 +37,7 @@ public class AttachmentService {
   @Transactional
   public TaskAttachment storeAttachment(UUID taskId, MultipartFile file) throws IOException {
     Task task = taskRepository.findById(taskId)
-        .orElseThrow(() -> new IllegalArgumentException("Task not found with id: " + taskId));
+        .orElseThrow(() -> new IllegalArgumentException("Task not found: " + taskId));
 
     if (file.isEmpty()) {
       throw new IllegalArgumentException("Cannot store empty file");
@@ -54,26 +53,27 @@ public class AttachmentService {
     if (!Files.exists(uploadPath)) {
       Files.createDirectories(uploadPath);
     }
-
-    Path filePath = uploadPath.resolve(storedFileName);
-    Files.copy(file.getInputStream(), filePath);
+    Files.copy(file.getInputStream(), uploadPath.resolve(storedFileName));
 
     TaskAttachment attachment = new TaskAttachment();
-    attachment.setTask(task);  // раньше тут был ID теперь в Attachment Task а не ID
+    attachment.setTask(task);
     attachment.setFileName(originalFileName);
     attachment.setStoredFileName(storedFileName);
     attachment.setContentType(file.getContentType());
     attachment.setSize(file.getSize());
     attachment.setUploadedAt(LocalDateTime.now());
 
-    log.info("Storing attachment for task: {}, file: {}", taskId, originalFileName);
-    return attachmentRepository.save(attachment);
+    TaskAttachment saved = attachmentRepository.save(attachment);
+    log.info("Stored attachment {} for task {}", saved.getId(), taskId);
+    return saved;
   }
 
+  @Transactional(readOnly = true)
   public Optional<TaskAttachment> getAttachment(Long attachmentId) {
     return attachmentRepository.findById(attachmentId);
   }
 
+  @Transactional(readOnly = true)
   public Resource loadAsResource(Long attachmentId) throws IOException {
     TaskAttachment attachment = attachmentRepository.findById(attachmentId)
         .orElseThrow(() -> new AttachmentNotFoundException(attachmentId));
@@ -96,6 +96,7 @@ public class AttachmentService {
     log.info("Deleted attachment: {} for task: {}", attachmentId, attachment.getTask().getId());
   }
 
+  @Transactional(readOnly = true)
   public List<TaskAttachment> getAttachmentsByTaskId(UUID taskId) {
     return attachmentRepository.findByTaskId(taskId);
   }
