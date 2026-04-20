@@ -1,0 +1,61 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: resilient-gateway
+
+external:
+  api:
+    base-url: "http://localhost:8080/external/v1"
+
+# JWT
+jwt:
+  secret: "W2q3Z7p9L5vR8xY1aB4cD6eF0gH2iJ3kM5nO7pQ9rS1tU3vW5xY7zA9bC1dE2f"
+  expiration-ms: 3600000  # 1 час
+
+# хеширование паролей
+password:
+  pepper: "s3cr3tP3pp3r"
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      externalApi:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        record-exceptions:
+          - com.mipt.sem2.hw4.exception.ExternalApiException
+          - org.springframework.web.client.ResourceAccessException
+          - org.springframework.web.client.HttpServerErrorException
+        ignore-exceptions:
+          - com.mipt.sem2.hw4.exception.TaskNotFoundException
+  ratelimiter:
+    instances:
+      externalApi:
+        limit-for-period: 5
+        limit-refresh-period: 10s
+        timeout-duration: 500ms
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Логирование
+logging:
+  level:
+    com.mipt: DEBUG
+    org.springframework.web.client.RestClient: DEBUG
+  pattern:
+    console: "%d{ISO8601} %-5level [%thread] %X{traceId} %logger{36} - %msg%n"
